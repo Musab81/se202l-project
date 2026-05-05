@@ -14,8 +14,4 @@ COPY frontend/ ./frontend/
 # Expose Flask port
 EXPOSE 5000
 
-# Health check
-HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
-  CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"
-
 CMD ["python", "app.py"]
