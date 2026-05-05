@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physics Sandbox — Interactive Simulations</title>
+  <meta name="description" content="Interactive physics sandbox with real-time animations for projectile motion, pendulum, free fall, and spring experiments." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ── Header ── -->
+  <header class="app-header">
+    <h1>⚛ Physics Sandbox</h1>
+    <p>Interactive real-time physics simulations — drag a slider and watch the universe respond.</p>
+  </header>
+
+  <!-- ── Tab Bar ── -->
+  <nav class="tabs-bar" role="tablist">
+    <button class="tab-btn active" data-tab="projectile" role="tab" aria-selected="true" id="tab-projectile">
+      <span class="tab-icon">🚀</span> Projectile Motion
+    </button>
+    <button class="tab-btn" data-tab="pendulum" role="tab" aria-selected="false" id="tab-pendulum">
+      <span class="tab-icon">🔵</span> Pendulum
+    </button>
+    <button class="tab-btn" data-tab="freefall" role="tab" aria-selected="false" id="tab-freefall">
+      <span class="tab-icon">🌍</span> Free Fall
+    </button>
+    <button class="tab-btn" data-tab="spring" role="tab" aria-selected="false" id="tab-spring">
+      <span class="tab-icon">🌀</span> Spring / Hooke's Law
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       PANEL 1 — PROJECTILE MOTION
+  ══════════════════════════════════════════════════════════════════════ -->
+  <section class="experiment-panel active" id="projectile-panel" role="tabpanel" aria-labelledby="tab-projectile">
+    <div class="panel-grid">
+
+      <!-- Canvas -->
+      <div class="glass-card canvas-section">
+        <div class="canvas-wrapper">
+          <canvas id="canvas-projectile" width="600" height="400"></canvas>
+        </div>
+        <div class="playback-controls">
+          <button class="ctrl-btn play" id="proj-play">▶ Play</button>
+          <button class="ctrl-btn" id="proj-pause">⏸ Pause</button>
+          <button class="ctrl-btn" id="proj-reset">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- Inputs -->
+      <div class="glass-card input-panel">
+        <div class="panel-title">
+          <span class="accent-dot"></span>
+          Projectile Motion
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Launch Angle</span>
+            <span id="proj-angle-val">45°</span>
+          </div>
+          <input type="range" id="proj-angle" min="5" max="85" value="45" step="1" aria-label="Launch angle" />
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Initial Velocity</span>
+            <span id="proj-vel-val">30 m/s</span>
+          </div>
+          <input type="range" id="proj-vel" min="5" max="80" value="30" step="1" aria-label="Initial velocity" />
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Gravity</span>
+            <span id="proj-grav-val">9.8 m/s²</span>
+          </div>
+          <input type="range" id="proj-grav" min="1" max="25" value="9.8" step="0.1" aria-label="Gravity" />
+        </div>
+
+        <div class="computed-box">
+          <div class="result-row">
+            <span class="label">Max Height</span>
+            <span class="value" id="proj-r-height">—</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Range</span>
+            <span class="value" id="proj-r-range">—</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Time of Flight</span>
+            <span class="value" id="proj-r-time">—</span>
+          </div>
+        </div>
+
+        <button class="save-btn" id="proj-save">💾 Save Result</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       PANEL 2 — PENDULUM
+  ══════════════════════════════════════════════════════════════════════ -->
+  <section class="experiment-panel" id="pendulum-panel" role="tabpanel" aria-labelledby="tab-pendulum">
+    <div class="panel-grid">
+
+      <div class="glass-card canvas-section">
+        <div class="canvas-wrapper">
+          <canvas id="canvas-pendulum" width="600" height="400"></canvas>
+        </div>
+        <div class="playback-controls">
+          <button class="ctrl-btn play" id="pend-play">▶ Play</button>
+          <button class="ctrl-btn" id="pend-pause">⏸ Pause</button>
+          <button class="ctrl-btn" id="pend-reset">↺ Reset</button>
+        </div>
+      </div>
+
+      <div class="glass-card input-panel">
+        <div class="panel-title">
+          <span class="accent-dot"></span>
+          Pendulum
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Rope Length</span>
+            <span id="pend-len-val">1.5 m</span>
+          </div>
+          <input type="range" id="pend-len" min="0.5" max="5" value="1.5" step="0.1" aria-label="Rope length" />
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Start Angle</span>
+            <span id="pend-angle-val">30°</span>
+          </div>
+          <input type="range" id="pend-angle" min="5" max="75" value="30" step="1" aria-label="Start angle" />
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Gravity</span>
+            <span id="pend-grav-val">9.8 m/s²</span>
+          </div>
+          <input type="range" id="pend-grav" min="1" max="25" value="9.8" step="0.1" aria-label="Gravity" />
+        </div>
+
+        <div class="computed-box">
+          <div class="result-row">
+            <span class="label">Period</span>
+            <span class="value" id="pend-r-period">—</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Frequency</span>
+            <span class="value" id="pend-r-freq">—</span>
+          </div>
+        </div>
+
+        <button class="save-btn" id="pend-save">💾 Save Result</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       PANEL 3 — FREE FALL
+  ══════════════════════════════════════════════════════════════════════ -->
+  <section class="experiment-panel" id="freefall-panel" role="tabpanel" aria-labelledby="tab-freefall">
+    <div class="panel-grid">
+
+      <div class="glass-card canvas-section">
+        <div class="canvas-wrapper">
+          <canvas id="canvas-freefall" width="600" height="400"></canvas>
+        </div>
+        <div class="playback-controls">
+          <button class="ctrl-btn play" id="ff-play">▶ Play</button>
+          <button class="ctrl-btn" id="ff-pause">⏸ Pause</button>
+          <button class="ctrl-btn" id="ff-reset">↺ Reset</button>
+        </div>
+      </div>
+
+      <div class="glass-card input-panel">
+        <div class="panel-title">
+          <span class="accent-dot"></span>
+          Free Fall
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Drop Height</span>
+            <span id="ff-height-val">50 m</span>
+          </div>
+          <input type="range" id="ff-height" min="5" max="200" value="50" step="1" aria-label="Drop height" />
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Gravity</span>
+            <span id="ff-grav-val">9.8 m/s²</span>
+          </div>
+          <input type="range" id="ff-grav" min="1" max="25" value="9.8" step="0.1" aria-label="Gravity" />
+        </div>
+
+        <div class="computed-box">
+          <div class="result-row">
+            <span class="label">Time to Fall</span>
+            <span class="value" id="ff-r-time">—</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Final Velocity</span>
+            <span class="value" id="ff-r-vel">—</span>
+          </div>
+        </div>
+
+        <button class="save-btn" id="ff-save">💾 Save Result</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       PANEL 4 — SPRING / HOOKE'S LAW
+  ══════════════════════════════════════════════════════════════════════ -->
+  <section class="experiment-panel" id="spring-panel" role="tabpanel" aria-labelledby="tab-spring">
+    <div class="panel-grid">
+
+      <div class="glass-card canvas-section">
+        <div class="canvas-wrapper">
+          <canvas id="canvas-spring" width="600" height="400"></canvas>
+        </div>
+        <div class="playback-controls">
+          <button class="ctrl-btn play" id="sp-play">▶ Play</button>
+          <button class="ctrl-btn" id="sp-pause">⏸ Pause</button>
+          <button class="ctrl-btn" id="sp-reset">↺ Reset</button>
+        </div>
+      </div>
+
+      <div class="glass-card input-panel">
+        <div class="panel-title">
+          <span class="accent-dot"></span>
+          Spring / Hooke's Law
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Spring Constant (k)</span>
+            <span id="sp-k-val">50 N/m</span>
+          </div>
+          <input type="range" id="sp-k" min="5" max="200" value="50" step="1" aria-label="Spring constant" />
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Displacement</span>
+            <span id="sp-disp-val">0.3 m</span>
+          </div>
+          <input type="range" id="sp-disp" min="0.05" max="1" value="0.3" step="0.01" aria-label="Displacement" />
+        </div>
+
+        <div class="computed-box">
+          <div class="result-row">
+            <span class="label">Force (F = kx)</span>
+            <span class="value" id="sp-r-force">—</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Potential Energy</span>
+            <span class="value" id="sp-r-energy">—</span>
+          </div>
+        </div>
+
+        <button class="save-btn" id="sp-save">💾 Save Result</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       RESULTS DASHBOARD
+  ══════════════════════════════════════════════════════════════════════ -->
+  <section class="dashboard-section">
+    <div class="glass-card" style="padding:0;">
+      <div class="dashboard-header" style="padding:20px 24px 0;">
+        <h2>📊 Saved Results <span class="badge" id="result-count">0</span></h2>
+        <button class="refresh-btn" id="refresh-btn">🔄 Refresh</button>
+      </div>
+
+      <div class="table-wrapper" style="margin-top:16px;">
+        <table id="results-table" aria-label="Saved experiment results">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Experiment</th>
+              <th>Parameters</th>
+              <th>Results</th>
+              <th>Timestamp</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody">
+            <tr>
+              <td colspan="6">
+                <div class="empty-state">
+                  <span class="icon">🔭</span>
+                  No experiments saved yet. Run a simulation and click <strong>Save Result</strong>.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /app-wrapper -->
+
+<!-- Toast notification -->
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
