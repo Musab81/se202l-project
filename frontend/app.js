@@ -69,12 +69,14 @@ function bindSlider(id, displayId, suffix, onchange) {
   }
 
   function toCanvas(px, py) {
-    const T   = 2 * vel * Math.sin(angle) / grav;
-    const R   = vel * Math.cos(angle) * T;
-    const Hm  = (vel * Math.sin(angle)) ** 2 / (2 * grav);
+    // Use FIXED world-space scales so the arc shape changes with angle.
+    // Max range occurs at 45°: R_max = v²/g
+    // Max height occurs at 90°: H_max = v²/(2g)
+    const worldW = (vel * vel) / grav;          // fixed horizontal scale
+    const worldH = (vel * vel) / (2 * grav);    // fixed vertical scale
     const pad = 40;
-    const sx = pad + (px / (R || 1)) * (W - 2 * pad);
-    const sy = H - pad - (py / (Hm * 1.2 || 1)) * (H - 2 * pad);
+    const sx = pad + (px / (worldW || 1)) * (W - 2 * pad);
+    const sy = H - pad - (py / (worldH * 1.1 || 1)) * (H - 2 * pad);
     return { sx, sy };
   }
 
